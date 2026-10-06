@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Computational Thinking Quest — Bab 1 Berpikir Komputasional</title>
+<style>
+:root{
+  --bg:#07111f;--bg2:#0b1830;--panel:#10213d;--panel2:#132b4d;--text:#eef7ff;--muted:#a8bdd2;
+  --cyan:#59e1ff;--blue:#6ca6ff;--violet:#a78bfa;--green:#4ade80;--yellow:#facc15;--red:#fb7185;
+  --border:rgba(255,255,255,.12);--shadow:0 20px 60px rgba(0,0,0,.28);--radius:22px;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;font-family:Inter,ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;background:radial-gradient(circle at 20% 0,#143b67 0,transparent 35%),linear-gradient(160deg,var(--bg),#08182b 48%,#07111f);color:var(--text);min-height:100vh}
+button,input,select,textarea{font:inherit}
+button{cursor:pointer}
+:focus-visible{outline:3px solid var(--yellow);outline-offset:3px}
+.hidden{display:none!important}
+.muted{color:var(--muted)}
+.small{font-size:.9rem}.tiny{font-size:.78rem}
+.kicker{letter-spacing:.16em;text-transform:uppercase;font-weight:800;color:var(--cyan);font-size:.78rem}
+.badge-pill{display:inline-flex;gap:.45rem;align-items:center;padding:.42rem .75rem;border:1px solid var(--border);border-radius:999px;background:rgba(255,255,255,.05);font-size:.84rem}
+.tag{display:inline-block;padding:.28rem .55rem;border-radius:999px;background:rgba(89,225,255,.12);color:#baf4ff;font-size:.78rem;font-weight:700}
+.shell{max-width:1240px;margin:auto;padding:18px}
+.topbar{position:sticky;top:0;z-index:50;background:rgba(7,17,31,.82);backdrop-filter:blur(16px);border-bottom:1px solid var(--border)}
+.topbar .inner{max-width:1240px;margin:auto;padding:11px 18px;display:flex;gap:12px;align-items:center;justify-content:space-between}
+.brand{font-weight:900;letter-spacing:.02em}.brand span{color:var(--cyan)}
+.status{display:flex;gap:10px;align-items:center;flex-wrap:wrap;justify-content:flex-end}
+.progress-track{width:150px;height:9px;border-radius:99px;background:rgba(255,255,255,.1);overflow:hidden}.progress-fill{height:100%;width:0;background:linear-gradient(90deg,var(--cyan),var(--violet));transition:width .4s ease}
+.btn{border:0;border-radius:14px;padding:.78rem 1rem;font-weight:800;color:#04111d;background:linear-gradient(135deg,var(--cyan),#89f0ff);box-shadow:0 8px 24px rgba(89,225,255,.18)}
+.btn:hover{transform:translateY(-1px)}
+.btn.secondary{color:var(--text);background:rgba(255,255,255,.08);border:1px solid var(--border);box-shadow:none}
+.btn.success{background:linear-gradient(135deg,#4ade80,#a7f3d0)}
+.btn.warn{background:linear-gradient(135deg,#fde047,#f59e0b)}
+.btn.danger{background:linear-gradient(135deg,#fb7185,#f43f5e);color:white}
+.btn.sm{padding:.5rem .72rem;border-radius:10px;font-size:.88rem}
+.card{background:linear-gradient(180deg,rgba(19,43,77,.95),rgba(10,29,52,.95));border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);padding:22px}
+.grid{display:grid;gap:18px}.grid.two{grid-template-columns:repeat(2,minmax(0,1fr))}.grid.three{grid-template-columns:repeat(3,minmax(0,1fr))}.grid.four{grid-template-columns:repeat(4,minmax(0,1fr))}
+.hero{min-height:88vh;display:grid;place-items:center;padding:34px 18px;position:relative;overflow:hidden}
+.hero:before,.hero:after{content:"";position:absolute;border-radius:50%;filter:blur(10px);opacity:.28}.hero:before{width:360px;height:360px;background:var(--cyan);top:-120px;left:-80px}.hero:after{width:430px;height:430px;background:var(--violet);bottom:-170px;right:-120px}
+.hero-card{position:relative;z-index:2;max-width:980px;text-align:center;padding:38px;border:1px solid var(--border);border-radius:34px;background:rgba(5,15,28,.74);backdrop-filter:blur(16px);box-shadow:0 30px 100px rgba(0,0,0,.38)}
+.hero h1{font-size:clamp(2.4rem,7vw,5.8rem);line-height:.98;margin:.4rem 0 1rem;background:linear-gradient(90deg,#fff,var(--cyan),#c4b5fd);-webkit-background-clip:text;color:transparent}
+.hero p{font-size:clamp(1rem,2vw,1.25rem);color:#c6d8e7;max-width:780px;margin:0 auto 22px}
+.orbit{margin:24px auto;width:min(440px,86vw);aspect-ratio:1;position:relative;border:1px dashed rgba(255,255,255,.2);border-radius:50%;display:grid;place-items:center}
+.orbit .core{width:150px;height:150px;border-radius:50%;display:grid;place-items:center;background:linear-gradient(145deg,#173e68,#11233d);border:1px solid rgba(89,225,255,.4);font-size:3rem;box-shadow:0 0 50px rgba(89,225,255,.15)}
+.orbit .chip{position:absolute;padding:.6rem .8rem;border-radius:999px;background:#102847;border:1px solid var(--border);font-weight:800}.chip.c1{top:4%;left:36%}.chip.c2{right:-2%;top:43%}.chip.c3{bottom:7%;left:34%}.chip.c4{left:-4%;top:43%}
+.view{display:none;animation:fade .28s ease}.view.active{display:block}@keyframes fade{from{opacity:.2;transform:translateY(8px)}to{opacity:1;transform:none}}
+.section-head{display:flex;gap:18px;align-items:flex-start;justify-content:space-between;margin:20px 0}.section-head h2{font-size:clamp(1.8rem,4vw,3rem);margin:.25rem 0}.section-head p{max-width:760px;color:var(--muted)}
+.navgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:12px}.navcard{border:1px solid var(--border);background:rgba(255,255,255,.045);border-radius:18px;padding:16px;text-align:left;color:var(--text);min-height:120px;transition:.2s}.navcard:hover{background:rgba(255,255,255,.075);transform:translateY(-2px)}.navcard.locked{opacity:.45;filter:grayscale(.4)}.navcard.done{border-color:rgba(74,222,128,.5)}
+.metric{padding:16px;border-radius:18px;background:rgba(255,255,255,.045);border:1px solid var(--border)}.metric strong{display:block;font-size:1.6rem;margin-top:.25rem}
+.ring{--p:0;width:116px;height:116px;border-radius:50%;display:grid;place-items:center;background:conic-gradient(var(--cyan) calc(var(--p)*1%),rgba(255,255,255,.08) 0);position:relative}.ring:after{content:"";position:absolute;inset:10px;border-radius:50%;background:#0d1c33}.ring span{position:relative;z-index:2;font-weight:900;font-size:1.25rem}
+.form-row{display:grid;gap:8px;margin-bottom:14px}.input,select,textarea{width:100%;color:var(--text);background:#0b1c32;border:1px solid var(--border);border-radius:14px;padding:.8rem .9rem}.input::placeholder,textarea::placeholder{color:#7f98ae}textarea{min-height:110px;resize:vertical}
+.question{padding:18px;border-radius:18px;background:rgba(255,255,255,.04);border:1px solid var(--border);margin:14px 0}.question h4{margin:.1rem 0 .7rem}.option{display:flex;gap:10px;align-items:flex-start;margin:.48rem 0;padding:.55rem;border-radius:10px}.option:hover{background:rgba(255,255,255,.04)}
+.feedback{margin-top:10px;padding:11px 13px;border-radius:12px;background:rgba(89,225,255,.08);border-left:4px solid var(--cyan);display:none}.feedback.show{display:block}.feedback.ok{background:rgba(74,222,128,.1);border-color:var(--green)}.feedback.bad{background:rgba(251,113,133,.1);border-color:var(--red)}
+.zone-wrap{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin-top:16px}.dropzone{min-height:160px;border:2px dashed rgba(255,255,255,.18);border-radius:18px;padding:14px;background:rgba(255,255,255,.025)}.dropzone.dragover{border-color:var(--cyan);background:rgba(89,225,255,.08)}
+.draggable{padding:12px 14px;margin:10px 0;border-radius:14px;background:#132f53;border:1px solid var(--border);cursor:grab}.draggable.correct{border-color:rgba(74,222,128,.7)}.draggable.wrong{border-color:rgba(251,113,133,.8)}
+.mobile-choices{display:flex;gap:7px;margin-top:8px;flex-wrap:wrap}
+.concept-card{min-height:178px;perspective:1000px}.flip-inner{height:100%;position:relative;transition:transform .55s;transform-style:preserve-3d}.concept-card.flipped .flip-inner{transform:rotateY(180deg)}.flip-face{position:absolute;inset:0;backface-visibility:hidden;border:1px solid var(--border);border-radius:18px;padding:18px;background:linear-gradient(160deg,#153357,#0d2039)}.flip-back{transform:rotateY(180deg);background:linear-gradient(160deg,#2a2352,#15233d)}
+.table-wrap{overflow:auto;border:1px solid var(--border);border-radius:16px}table{width:100%;border-collapse:collapse;min-width:560px}th,td{padding:12px 14px;border-bottom:1px solid var(--border);text-align:left}th{background:rgba(255,255,255,.06)}
+.bar-chart{display:flex;align-items:end;gap:10px;height:190px;padding:16px;border-radius:16px;background:rgba(255,255,255,.03);border:1px solid var(--border)}.bar{flex:1;min-width:38px;background:linear-gradient(180deg,var(--cyan),#2d75ff);border-radius:10px 10px 3px 3px;position:relative}.bar span{position:absolute;bottom:100%;left:50%;transform:translateX(-50%);font-size:.76rem;margin-bottom:4px}.bar label{position:absolute;top:100%;left:50%;transform:translateX(-50%);font-size:.72rem;margin-top:5px;color:var(--muted);white-space:nowrap}
+.order-list{display:grid;gap:9px}.order-item{display:flex;gap:10px;align-items:center;padding:12px;border-radius:14px;background:#102845;border:1px solid var(--border)}.order-item .handle{font-size:1.2rem;color:var(--muted)}
+.timeline{display:grid;gap:12px}.step{display:grid;grid-template-columns:42px 1fr;gap:12px;align-items:start}.step .dot{width:38px;height:38px;border-radius:50%;display:grid;place-items:center;background:linear-gradient(135deg,var(--cyan),var(--violet));color:#08111f;font-weight:900}.step .body{padding:13px 15px;border-radius:15px;background:rgba(255,255,255,.04);border:1px solid var(--border)}
+.route-board{display:grid;grid-template-columns:minmax(0,1.45fr) minmax(280px,.8fr);gap:18px}.graph{border-radius:20px;background:radial-gradient(circle at center,rgba(89,225,255,.08),transparent 60%),#08182b;border:1px solid var(--border);min-height:410px;padding:8px}.graph svg{width:100%;height:410px}.edge{stroke:#5a7390;stroke-width:6;stroke-linecap:round}.edge.active{stroke:var(--cyan);filter:drop-shadow(0 0 6px rgba(89,225,255,.8))}.node{fill:#102e52;stroke:#a9c7e8;stroke-width:3}.node.home,.node.school{fill:#533f9b}.node-label{fill:white;font-size:15px;font-weight:800;text-anchor:middle;dominant-baseline:central}.weight{fill:#dff7ff;font-size:12px;font-weight:700}
+.route-option{padding:12px;border-radius:14px;border:1px solid var(--border);background:rgba(255,255,255,.04);margin:9px 0}.route-option.active{border-color:var(--cyan);background:rgba(89,225,255,.07)}
+.ai-grid{display:grid;grid-template-columns:repeat(4,minmax(150px,1fr));gap:12px}.ai-station{padding:14px;border:1px solid var(--border);border-radius:16px;background:rgba(255,255,255,.04);min-height:120px}.ai-station h4{margin:.1rem 0 .6rem}
+.flow{display:flex;gap:9px;align-items:center;flex-wrap:wrap;justify-content:center;margin:18px 0}.flow .box{padding:10px 13px;border-radius:12px;background:#133053;border:1px solid var(--border);font-weight:800}.flow .arrow{color:var(--cyan);font-weight:900}
+.modal{position:fixed;inset:0;background:rgba(0,0,0,.65);display:none;place-items:center;z-index:90;padding:20px}.modal.show{display:grid}.modal-card{max-width:680px;width:100%;background:#0e213b;border:1px solid var(--border);border-radius:22px;padding:22px;box-shadow:var(--shadow)}
+.toast{position:fixed;right:18px;bottom:18px;z-index:100;padding:13px 16px;border-radius:14px;background:#102944;border:1px solid var(--border);box-shadow:var(--shadow);transform:translateY(120px);opacity:0;transition:.3s}.toast.show{transform:none;opacity:1}
+.achievement{display:flex;gap:12px;align-items:center;padding:14px;border:1px solid var(--border);border-radius:16px;background:rgba(255,255,255,.04)}.achievement.locked{opacity:.35}.achievement .ico{font-size:2rem}
+.callout{padding:16px;border-radius:16px;border-left:4px solid var(--yellow);background:rgba(250,204,21,.08)}
+details{background:rgba(255,255,255,.035);border:1px solid var(--border);border-radius:14px;padding:10px 14px;margin:10px 0}summary{cursor:pointer;font-weight:800}
+hr{border:0;border-top:1px solid var(--border);margin:22px 0}
+footer{max-width:1240px;margin:30px auto 0;padding:20px;color:var(--muted);font-size:.84rem;text-align:center;border-top:1px solid var(--border)}
+@media(max-width:900px){.grid.two,.grid.three,.grid.four,.route-board,.ai-grid{grid-template-columns:1fr 1fr}.route-board{grid-template-columns:1fr}.topbar .inner{align-items:flex-start}.progress-track{width:110px}}
+@media(max-width:640px){.shell{padding:12px}.grid.two,.grid.three,.grid.four,.ai-grid,.zone-wrap{grid-template-columns:1fr}.topbar .inner{display:block}.status{justify-content:flex-start;margin-top:8px}.hero-card{padding:24px 16px}.orbit{width:300px}.chip{font-size:.73rem}.section-head{display:block}.route-board{grid-template-columns:1fr}.graph svg{height:330px}.graph{min-height:330px}.btn{width:100%}.mobile-choices .btn{width:auto}.progress-track{width:100%}}
+@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<div id="splash" class="hero">
+  <div class="hero-card">
+    <div class="kicker">Bab 1 • Koding & Kecerdasan Artifisial Kelas X</div>
+    <h1>Computational Thinking Quest</h1>
+    <p><strong>Pecahkan Masalah. Temukan Pola. Buat Solusi.</strong><br>Kamu menjadi <em>Problem Solver</em> yang harus menaklukkan masalah nyata dengan empat kekuatan berpikir komputasional.</p>
+    <div class="orbit" aria-label="Empat komponen berpikir komputasional">
+      <div class="core">🧠</div>
+      <div class="chip c1">🧩 Dekomposisi</div><div class="chip c2">🔎 Pola</div><div class="chip c3">🎯 Abstraksi</div><div class="chip c4">⚙️ Algoritma</div>
+    </div>
+    <button class="btn" id="startAdventure">🚀 Mulai Petualangan</button>
+    <div class="tiny muted" style="margin-top:14px">Media lokal • Progress tersimpan di browser perangkat ini.</div>
+  </div>
+</div>
+
+<div id="app" class="hidden">
+<header class="topbar">
+  <div class="inner">
+    <div class="brand">CT <span>QUEST</span></div>
+    <div class="status">
+      <span class="badge-pill">👤 <span id="topName">Problem Solver</span></span>
+      <span class="badge-pill">⚡ <strong id="xpTop">0</strong> XP</span>
+      <span class="badge-pill">🏅 <strong id="badgeTop">0</strong></span>
+      <div class="progress-track" aria-label="Progress belajar"><div id="progressTop" class="progress-fill"></div></div>
+      <button class="btn secondary sm" onclick="showView('dashboard')">Mission Control</button>
+      <button class="btn secondary sm" onclick="openModal('helpModal')">?</button>
+    </div>
+  </div>
+</header>
+
+<main class="shell">
+<section id="profile" class="view active">
+  <div class="section-head"><div><div class="kicker">Registrasi lokal</div><h2>Identitas Problem Solver</h2><p>Isi nama dan kelas. Data hanya disimpan pada browser ini menggunakan <code>localStorage</code>.</p></div></div>
+  <div class="card" style="max-width:680px;margin:auto">
+    <div class="form-row"><label for="studentName">Nama lengkap</label><input id="studentName" class="input" placeholder="Contoh: Andi Pratama" autocomplete="name"></div>
+    <div class="form-row"><label for="studentClass">Kelas</label><input id="studentClass" class="input" placeholder="Contoh: X-A"></div>
+    <button id="saveProfile" class="btn">Simpan & Masuk Mission Control</button>
+  </div>
+</section>
+
+<section id="dashboard" class="view">
+  <div class="section-head"><div><div class="kicker">Mission Control</div><h2>Halo, <span id="dashName">Problem Solver</span> 👋</h2><p>Kota Digital membutuhkan kemampuanmu. Selesaikan misi secara bertahap: memahami, mengaplikasi, lalu merefleksi.</p></div><div class="ring" id="progressRing"><span id="ringText">0%</span></div></div>
+  <div class="grid four">
+    <div class="metric"><span class="muted">Level</span><strong id="levelMetric">1</strong></div>
+    <div class="metric"><span class="muted">XP</span><strong id="xpMetric">0</strong></div>
+    <div class="metric"><span class="muted">Badge</span><strong id="badgeMetric">0</strong></div>
+    <div class="metric"><span class="muted">Misi selesai</span><strong id="missionMetric">0/11</strong></div>
+  </div>
+  <div class="callout" style="margin:18px 0"><strong>Alur Pembelajaran Mendalam:</strong> Pemicu masalah → pengetahuan awal → memahami → eksplorasi → mencoba → mendapat umpan balik → mencoba kembali → mengaplikasi → refleksi → transfer ke kehidupan nyata.</div>
+  <div id="missionNav" class="navgrid"></div>
+  <div style="margin-top:20px"><button class="btn danger sm" id="resetBtn">Reset Progress</button></div>
+</section>
+
+<section id="objectives" class="view">
+  <div class="section-head"><div><div class="kicker">Arah Belajar</div><h2>Tujuan & Peta Materi</h2><p>Fokus utamanya adalah menerapkan penyelesaian masalah kompleks dalam kehidupan sehari-hari melalui berpikir komputasional.</p></div></div>
+  <div class="grid two">
+    <div class="card"><h3>🎯 Setelah belajar, kamu diharapkan mampu</h3><div class="timeline">
+      <div class="step"><div class="dot">1</div><div class="body">Membedakan masalah sederhana dan kompleks serta menjelaskan mengapa masalah kompleks memerlukan analisis.</div></div>
+      <div class="step"><div class="dot">2</div><div class="body">Menggunakan dekomposisi, pengenalan pola, abstraksi, dan algoritma secara terpadu.</div></div>
+      <div class="step"><div class="dot">3</div><div class="body">Menganalisis akar masalah dan merancang solusi yang dapat diuji dan dievaluasi.</div></div>
+      <div class="step"><div class="dot">4</div><div class="body">Memahami secara pengantar bagaimana berpikir komputasional terhubung dengan sistem kecerdasan artifisial.</div></div>
+    </div></div>
+    <div class="card"><h3>🗺️ Peta konsep</h3><div class="flow"><span class="box">Masalah kompleks</span><span class="arrow">→</span><span class="box">Dekomposisi</span><span class="arrow">→</span><span class="box">Pola</span><span class="arrow">→</span><span class="box">Abstraksi</span><span class="arrow">→</span><span class="box">Algoritma</span><span class="arrow">→</span><span class="box">Evaluasi</span></div>
+      <details><summary>Berpikir Komputasional ≠ hanya coding</summary><p>Berpikir komputasional adalah pendekatan sistematis untuk memecahkan masalah. Ia dapat dipakai dalam teknologi, pendidikan, bisnis, kesehatan, dan kehidupan sehari-hari.</p></details>
+      <details><summary>Pembelajaran Mendalam di media ini</summary><p><strong>Berkesadaran:</strong> kamu mengetahui tujuan dan memonitor pemahaman. <strong>Bermakna:</strong> kasus berasal dari kehidupan siswa. <strong>Menggembirakan:</strong> aktivitas berbentuk misi, simulasi, game, dan feedback.</p></details>
+    </div>
+  </div>
+  <button class="btn" onclick="showView('m0')">Mulai Formatif Awal →</button>
+</section>
+
+<section id="m0" class="view">
+  <div class="section-head"><div><div class="kicker">Misi 0 • Berkesadaran</div><h2>Diagnostic Challenge</h2><p>Ini bukan ujian akhir. Tujuannya memotret pemahaman awalmu.</p></div></div>
+  <div class="card">
+    <div class="form-row"><label>Seberapa yakin kamu bisa memecahkan masalah kompleks? <strong id="confStartLabel">50</strong>/100</label><input id="confStart" type="range" min="0" max="100" value="50"></div>
+    <div id="pretestBox"></div>
+    <button class="btn" id="submitPretest">Simpan Jawaban Awal</button>
+    <div id="preFeedback" class="feedback"></div>
+  </div>
+</section>
+
+<section id="m1" class="view">
+  <div class="section-head"><div><div class="kicker">Misi 1 • Memahami</div><h2>Complexity Sorter</h2><p>Bedakan masalah sederhana dan kompleks berdasarkan jumlah faktor, langkah, keterkaitan, dan kebutuhan evaluasi.</p></div></div>
+  <div class="grid two">
+    <div class="card"><h3>📘 Inti Konsep</h3><p><strong>Masalah sederhana</strong> biasanya dapat diselesaikan dengan langkah langsung dan penyebab yang relatif jelas. <strong>Masalah kompleks</strong> melibatkan banyak faktor atau langkah, dapat memiliki beberapa solusi, dan biasanya perlu diuji serta dievaluasi.</p>
+    <div class="grid two">
+      <button class="concept-card" onclick="this.classList.toggle('flipped')" aria-label="Balik kartu ciri masalah sederhana"><span class="flip-inner"><span class="flip-face">🟢 <strong>Masalah Sederhana</strong><br><span class="muted">Klik untuk melihat cirinya</span></span><span class="flip-face flip-back">Penyebab relatif jelas • langkah langsung • solusi bisa segera dicoba.</span></span></button>
+      <button class="concept-card" onclick="this.classList.toggle('flipped')" aria-label="Balik kartu ciri masalah kompleks"><span class="flip-inner"><span class="flip-face">🟣 <strong>Masalah Kompleks</strong><br><span class="muted">Klik untuk melihat cirinya</span></span><span class="flip-face flip-back">Banyak faktor • saling terkait • perlu analisis • solusi mungkin perlu uji dan evaluasi.</span></span></button>
+    </div></div>
+    <div class="card"><h3>🎮 Seret / pilih kategori</h3><div id="complexCards"></div><div class="zone-wrap"><div id="simpleZone" class="dropzone" data-type="simple"><strong>MASALAH SEDERHANA</strong></div><div id="complexZone" class="dropzone" data-type="complex"><strong>MASALAH KOMPLEKS</strong></div></div><div id="m1Feedback" class="feedback"></div><div class="form-row" style="margin-top:12px"><label for="m1Why">Mengapa masalah kompleks tidak cukup diselesaikan dengan satu langkah?</label><textarea id="m1Why" placeholder="Jelaskan dengan kata-katamu..."></textarea></div><button class="btn" id="checkM1">Periksa & Selesaikan Misi</button></div>
+  </div>
+</section>
+
+<section id="m2" class="view">
+  <div class="section-head"><div><div class="kicker">Misi 2 • Mengaplikasi</div><h2>Decomposition Lab</h2><p>Pecah masalah besar menjadi bagian-bagian kecil agar lebih mudah dianalisis.</p></div></div>
+  <div class="grid two">
+    <div class="card"><h3>🧩 Break the Problem!</h3><p>Masalah: <strong>Antrean kantin sangat panjang saat jam istirahat.</strong></p><p class="muted">Klik komponen yang menurutmu perlu dianalisis.</p><div id="decompChoices" class="navgrid"></div><div id="m2Feedback" class="feedback"></div></div>
+    <div class="card"><h3>Transfer ke masalah baru</h3><p><strong>Tugas sekolah sering terlambat dikumpulkan.</strong> Pecah masalah ini menjadi minimal 3 bagian yang perlu diperiksa.</p><textarea id="m2Transfer" placeholder="Contoh format: 1) ... 2) ... 3) ..."></textarea><button class="btn" id="checkM2">Selesaikan Misi</button></div>
+  </div>
+</section>
+
+<section id="m3" class="view">
+  <div class="section-head"><div><div class="kicker">Misi 3 • Mengamati</div><h2>Pattern Hunter</h2><p>Temukan pola dari data, tetapi jangan langsung menyamakan pola dengan penyebab.</p></div></div>
+  <div class="grid two">
+    <div class="card"><h3>📊 Data simulasi antrean kantin</h3><div class="table-wrap"><table><thead><tr><th>Hari</th><th>09.30</th><th>10.00</th><th>12.00</th></tr></thead><tbody><tr><td>Senin</td><td>4</td><td>23</td><td>28</td></tr><tr><td>Selasa</td><td>5</td><td>25</td><td>29</td></tr><tr><td>Rabu</td><td>4</td><td>21</td><td>31</td></tr></tbody></table></div><p class="tiny muted">Data simulasi untuk pembelajaran.</p>
+      <div class="bar-chart" aria-label="Grafik rata-rata jumlah siswa dalam antrean"><div class="bar" style="height:18%"><span>4,3</span><label>09.30</label></div><div class="bar" style="height:75%"><span>23</span><label>10.00</label></div><div class="bar" style="height:96%"><span>29,3</span><label>12.00</label></div></div>
+    </div>
+    <div class="card"><h3>🔎 Temukan Pola</h3><div class="form-row"><label>Kapan antrean cenderung paling panjang?</label><select id="patternTime"><option value="">Pilih</option><option>09.30</option><option>10.00</option><option>12.00</option></select></div><div class="form-row"><label>Apa kesimpulan yang paling tepat?</label><select id="patternClaim"><option value="">Pilih</option><option value="cause">Jam 12.00 pasti menjadi penyebab antrean.</option><option value="trend">Data menunjukkan pola antrean lebih panjang sekitar 12.00; penyebabnya masih perlu dianalisis.</option><option value="none">Tidak ada pola apa pun.</option></select></div><div class="form-row"><label>Data tambahan apa yang ingin kamu kumpulkan?</label><textarea id="patternExtra" placeholder="Misalnya jumlah petugas, waktu pelayanan, jumlah siswa..."></textarea></div><button class="btn" id="checkM3">Analisis Pola</button><div id="m3Feedback" class="feedback"></div></div>
+  </div>
+</section>
+
+<section id="m4" class="view">
+  <div class="section-head"><div><div class="kicker">Misi 4 • Memilah</div><h2>Abstraction Filter</h2><p>Fokus pada informasi yang relevan dengan tujuan analisis.</p></div></div>
+  <div class="card"><h3>🎯 Important or Distraction?</h3><p>Tujuan: <strong>mengurangi antrean kantin.</strong> Seret kartu ke zona atau gunakan tombol kategori.</p><div id="abstractCards"></div><div class="zone-wrap"><div id="importantZone" class="dropzone" data-type="important"><strong>INFORMASI PENTING</strong></div><div id="distractZone" class="dropzone" data-type="distract"><strong>TIDAK RELEVAN UNTUK TUJUAN INI</strong></div></div><div id="m4Feedback" class="feedback"></div><button class="btn" id="checkM4">Periksa Abstraksi</button></div>
+</section>
+
+<section id="m5" class="view">
+  <div class="section-head"><div><div class="kicker">Misi 5 • Menyusun</div><h2>Algorithm Builder</h2><p>Algoritma adalah langkah yang logis, jelas, dan runtut untuk mencapai tujuan.</p></div></div>
+  <div class="grid two">
+    <div class="card"><h3>⚙️ Susun proses peminjaman buku</h3><p class="muted">Gunakan tombol ↑ ↓ untuk mengubah urutan.</p><div id="orderList" class="order-list"></div><button class="btn" id="checkOrder">Periksa Urutan</button><div id="m5Feedback" class="feedback"></div></div>
+    <div class="card"><h3>🔀 Branching Scenario</h3><p>Setelah mengecek katalog, buku yang kamu cari ternyata <strong>tidak tersedia</strong>. Apa langkah paling logis?</p><label class="option"><input type="radio" name="branch" value="leave"> Langsung pulang dan menyerah.</label><label class="option"><input type="radio" name="branch" value="reserve"> Cari alternatif atau lakukan reservasi.</label><label class="option"><input type="radio" name="branch" value="take"> Ambil buku lain tanpa mencatat.</label><button class="btn" id="checkBranch">Cek Percabangan</button></div>
+  </div>
+</section>
+
+<section id="m6" class="view">
+  <div class="section-head"><div><div class="kicker">Misi 6 • Berpikir Kritis</div><h2>5 Whys Detective</h2><p>Bedakan gejala dari kemungkinan akar masalah. Kasus dapat memiliki lebih dari satu penyebab yang masuk akal.</p></div></div>
+  <div class="grid two">
+    <div class="card"><h3>🕵️ Kasus Dela</h3><p>Nilai Matematika dan Bahasa Inggris Dela menurun. Sejak awal semester, kegiatan ekstrakurikulernya bertambah, ia sering tidur larut karena bermain ponsel, mudah lelah, sulit fokus, dan beberapa kali melewatkan latihan soal.</p><div class="callout"><strong>Evidence board:</strong><br>Gejala → bukti → kemungkinan penyebab → solusi.</div><div class="form-row"><label>Pilih 3 bukti yang paling relevan</label><label class="option"><input type="checkbox" class="evidence" value="sleep"> Sering tidur larut</label><label class="option"><input type="checkbox" class="evidence" value="practice"> Latihan soal berkurang</label><label class="option"><input type="checkbox" class="evidence" value="focus"> Sulit fokus</label><label class="option"><input type="checkbox" class="evidence" value="color"> Warna tas sekolah berubah</label><label class="option"><input type="checkbox" class="evidence" value="extra"> Ekstrakurikuler bertambah</label></div></div>
+    <div class="card"><h3>❓ Telusuri dengan 5 Whys</h3><div id="whyFields"></div><div class="form-row"><label>Hipotesis akar masalah</label><textarea id="rootHyp" placeholder="Dapat lebih dari satu faktor..."></textarea></div><div class="form-row"><label>Solusi yang akan kamu uji</label><textarea id="rootSolution" placeholder="Jelaskan solusi dan bagaimana mengevaluasinya..."></textarea></div><button class="btn" id="checkM6">Simpan Analisis</button><div id="m6Feedback" class="feedback"></div></div>
+  </div>
+</section>
+
+<section id="m7" class="view">
+  <div class="section-head"><div><div class="kicker">Misi 7 • Simulasi</div><h2>Race to School</h2><p>Pilih rute berdasarkan waktu tempuh, kondisi lalu lintas, cuaca, dan jumlah persimpangan. Data di bawah adalah simulasi.</p></div></div>
+  <div class="route-board">
+    <div class="graph card"><svg viewBox="0 0 720 410" role="img" aria-label="Graf rute dari rumah ke sekolah">
+      <line id="eRA" class="edge" x1="90" y1="205" x2="250" y2="90"/><line id="eAS" class="edge" x1="250" y1="90" x2="640" y2="205"/>
+      <line id="eRB" class="edge" x1="90" y1="205" x2="245" y2="205"/><line id="eBC" class="edge" x1="245" y1="205" x2="430" y2="205"/><line id="eCS" class="edge" x1="430" y1="205" x2="640" y2="205"/>
+      <line id="eRD" class="edge" x1="90" y1="205" x2="250" y2="330"/><line id="eDE" class="edge" x1="250" y1="330" x2="450" y2="320"/><line id="eES" class="edge" x1="450" y1="320" x2="640" y2="205"/>
+      <text class="weight" x="145" y="130">3</text><text class="weight" x="455" y="116">9</text><text class="weight" x="155" y="193">4</text><text class="weight" x="330" y="193">3</text><text class="weight" x="530" y="193">6</text><text class="weight" x="145" y="300">3</text><text class="weight" x="345" y="340">4</text><text class="weight" x="540" y="300">5</text>
+      <circle class="node home" cx="90" cy="205" r="34"/><text class="node-label" x="90" y="205">R</text>
+      <circle class="node" cx="250" cy="90" r="28"/><text class="node-label" x="250" y="90">A</text>
+      <circle class="node" cx="245" cy="205" r="28"/><text class="node-label" x="245" y="205">B</text>
+      <circle class="node" cx="430" cy="205" r="28"/><text class="node-label" x="430" y="205">C</text>
+      <circle class="node" cx="250" cy="330" r="28"/><text class="node-label" x="250" y="330">D</text>
+      <circle class="node" cx="450" cy="320" r="28"/><text class="node-label" x="450" y="320">E</text>
+      <circle class="node school" cx="640" cy="205" r="34"/><text class="node-label" x="640" y="205">S</text>
+    </svg></div>
+    <div class="card"><h3>🗺️ Kondisi Perjalanan</h3><div class="form-row"><label>Cuaca</label><select id="weather"><option value="clear">☀️ Cerah</option><option value="rain">🌧 Hujan</option></select></div><div class="form-row"><label>Waktu berangkat</label><select id="depart"><option value="0600">06.00</option><option value="0630">06.30</option><option value="0700">07.00</option></select></div><div id="routeOptions"></div><div id="routeResult" class="feedback show"></div><hr><textarea id="routeReflection" placeholder="Apa yang berubah ketika cuaca/waktu berubah? Apakah rute terpendek selalu tercepat?"></textarea><button class="btn" id="completeRoute">Simpan Analisis Rute</button></div>
+  </div>
+</section>
+
+<section id="m8" class="view">
+  <div class="section-head"><div><div class="kicker">Misi 8 • AI Integration Lab</div><h2>How Does AI Decide?</h2><p>Pelajari gambaran konseptual: <em>perception, data representation, reasoning, learning</em>.</p></div></div>
+  <div class="card"><div class="ai-grid"><div class="ai-station"><h4>👁 Perception</h4><p>Input dari lingkungan: lokasi, lalu lintas, cuaca, sensor.</p></div><div class="ai-station"><h4>🗂 Data Representation</h4><p>Data diorganisasi, misalnya menjadi graf berbobot atau deret waktu.</p></div><div class="ai-station"><h4>🧠 Reasoning</h4><p>Sistem menggunakan aturan/algoritma untuk membandingkan pilihan.</p></div><div class="ai-station"><h4>📈 Learning</h4><p>Sistem memperbaiki prediksi berdasarkan data historis dan umpan balik.</p></div></div>
+    <div class="flow"><span class="box">GPS + Cuaca + Lalu Lintas</span><span class="arrow">→</span><span class="box">Perception</span><span class="arrow">→</span><span class="box">Representation</span><span class="arrow">→</span><span class="box">Reasoning</span><span class="arrow">→</span><span class="box">Rekomendasi</span><span class="arrow">→</span><span class="box">Learning</span></div>
+    <h3>🎮 Klasifikasikan Pernyataan</h3><div id="aiCards"></div><button class="btn" id="checkAI">Periksa Klasifikasi</button><div id="m8Feedback" class="feedback"></div>
+  </div>
+</section>
+
+<section id="waste" class="view">
+  <div class="section-head"><div><div class="kicker">Bonus Game</div><h2>Waste Rescue — Save Our School!</h2><p>Terapkan empat komponen berpikir komputasional pada masalah sampah sekolah.</p></div></div>
+  <div class="grid two"><div class="card"><h3>Data simulasi sampah per hari</h3><div class="table-wrap"><table><thead><tr><th>Sumber</th><th>Organik</th><th>Plastik</th><th>Kertas</th></tr></thead><tbody><tr><td>Kantin</td><td>18 kg</td><td>13 kg</td><td>2 kg</td></tr><tr><td>Kelas</td><td>3 kg</td><td>5 kg</td><td>9 kg</td></tr><tr><td>Lapangan</td><td>2 kg</td><td>7 kg</td><td>1 kg</td></tr></tbody></table></div><p class="tiny muted">Data simulasi untuk pembelajaran.</p><div class="form-row"><label>Polanya apa?</label><textarea id="wastePattern"></textarea></div></div><div class="card"><h3>Rancang solusi</h3><div class="form-row"><label>Dekomposisi</label><textarea id="wasteDecomp" placeholder="Jenis sampah, sumber, waktu, pihak terlibat..."></textarea></div><div class="form-row"><label>Abstraksi</label><textarea id="wasteAbs" placeholder="Informasi paling relevan untuk tujuan pengurangan sampah..."></textarea></div><div class="form-row"><label>Algoritma tindakan</label><textarea id="wasteAlg" placeholder="Urutkan langkah: pemilahan, edukasi, pengumpulan, pengolahan, monitoring, evaluasi..."></textarea></div><button class="btn" id="completeWaste">Simpan Bonus Mission</button></div></div>
+</section>
+
+<section id="final" class="view">
+  <div class="section-head"><div><div class="kicker">Final Mission • Transfer</div><h2>The Ultimate Problem Solver</h2><p>Sekolah menggunakan terlalu banyak air setiap hari. Terapkan empat komponen tanpa petunjuk jawaban langsung.</p></div></div>
+  <div class="grid two"><div class="card"><h3>💧 Data penggunaan air</h3><div class="table-wrap"><table><thead><tr><th>Area</th><th>Liter/hari</th><th>Catatan</th></tr></thead><tbody><tr><td>Toilet</td><td>1.500</td><td>Puncak saat istirahat</td></tr><tr><td>Wastafel</td><td>700</td><td>Beberapa keran menetes</td></tr><tr><td>Kantin</td><td>500</td><td>Pencucian peralatan</td></tr><tr><td>Penyiraman</td><td>900</td><td>Dilakukan siang hari</td></tr><tr><td>Kebocoran</td><td>600</td><td>Estimasi dari meter malam</td></tr></tbody></table></div><p class="tiny muted">Data simulasi untuk pembelajaran.</p></div><div class="card"><h3>🏆 Kerjakan 4 tahap</h3><label>Dekomposisi<textarea id="finalD"></textarea></label><label>Pengenalan pola<textarea id="finalP"></textarea></label><label>Abstraksi<textarea id="finalA"></textarea></label><label>Algoritma solusi<textarea id="finalG"></textarea></label><button class="btn success" id="completeFinal">Mission Complete</button><div id="finalFeedback" class="feedback"></div></div></div>
+</section>
+
+<section id="evaluation" class="view">
+  <div class="section-head"><div><div class="kicker">Evaluasi Akhir</div><h2>Uji Kompetensi</h2><p>15 soal: pemahaman konsep, aplikasi, dan analisis masalah. Jawab semua sebelum mengirim.</p></div></div>
+  <div class="card"><div id="evalBox"></div><button class="btn" id="submitEval">Kirim Evaluasi</button><div id="evalResult" class="feedback"></div></div>
+</section>
+
+<section id="reflection" class="view">
+  <div class="section-head"><div><div class="kicker">Merefleksi</div><h2>Jurnal Belajar</h2><p>Refleksi tidak dinilai benar/salah. Jawablah sesuai perkembangan belajarmu.</p></div></div>
+  <div class="card"><div class="form-row"><label>1. Pemahaman Baru — Konsep apa yang paling menarik dan mengapa?</label><textarea id="ref1"></textarea></div><div class="form-row"><label>2. Penerapan — Sebutkan satu masalah nyata dan jelaskan bagaimana berpikir komputasional dapat membantu.</label><textarea id="ref2"></textarea></div><div class="form-row"><label>3. Tantangan — Konsep apa yang masih sulit dan apa rencanamu untuk memahaminya?</label><textarea id="ref3"></textarea></div><div class="form-row"><label>Seberapa yakin sekarang kamu bisa memecahkan masalah kompleks? <strong id="confEndLabel">50</strong>/100</label><input id="confEnd" type="range" min="0" max="100" value="50"></div><button class="btn" id="saveReflection">Simpan Refleksi</button><div id="reflectFeedback" class="feedback"></div></div>
+</section>
+
+<section id="achievements" class="view">
+  <div class="section-head"><div><div class="kicker">Achievement</div><h2>Koleksi Badge</h2><p>Badge menunjukkan kompetensi/misi yang telah kamu selesaikan, bukan peringkat terhadap teman.</p></div></div><div id="achievementGrid" class="grid two"></div>
+</section>
+
+<section id="summary" class="view">
+  <div class="section-head"><div><div class="kicker">Ringkasan</div><h2>Perjalanan Belajarmu</h2><p>Ringkasan ini menggabungkan progress, skor evaluasi, dan refleksi metakognitif.</p></div></div>
+  <div id="summaryContent" class="grid two"></div>
+</section>
+</main>
+<footer>Sumber materi utama: Buku Koding dan Kecerdasan Artifisial untuk SMA/MA Kelas X, Bab 1 — Berpikir Komputasional. Media ini adalah adaptasi pembelajaran lokal berbasis HTML; angka pada simulasi bukan data aktual.</footer>
+</div>
+
+<div id="helpModal" class="modal" role="dialog" aria-modal="true" aria-labelledby="helpTitle"><div class="modal-card"><h3 id="helpTitle">Petunjuk Media</h3><p>Gunakan <strong>Mission Control</strong> untuk berpindah misi. Beberapa misi terbuka setelah misi sebelumnya selesai. Progress tersimpan di browser yang sama.</p><p>Untuk game seret-lepas, pengguna layar sentuh dapat memakai tombol kategori yang tersedia di bawah setiap kartu.</p><button class="btn" onclick="closeModal('helpModal')">Tutup</button></div></div>
+<div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+<script>
+const STORAGE_KEY='ctq_state_v1';
+const defaultState={name:'',kelas:'',xp:0,completed:{},badges:[],pretest:{},confidenceStart:50,confidenceEnd:50,answers:{},evaluation:null,reflection:{},waste:false,lastView:'dashboard'};
+let state=loadState();
+function loadState(){try{return {...defaultState,...JSON.parse(localStorage.getItem(STORAGE_KEY)||'{}')}}catch(e){return {...defaultState}}}
+function saveState(){localStorage.setItem(STORAGE_KEY,JSON.stringify(state));renderStatus()}
+function toast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2600)}
+function openModal(id){document.getElementById(id).classList.add('show')} function closeModal(id){document.getElementById(id).classList.remove('show')}
+function showView(id){document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));const el=document.getElementById(id);if(el){el.classList.add('active');state.lastView=id;saveState();window.scrollTo({top:0,behavior:'smooth'});if(id==='summary')renderSummary();if(id==='achievements')renderAchievements();if(id==='dashboard')renderDashboard();}}
+const missionDefs=[
+ {id:'objectives',title:'Tujuan & Peta Materi',icon:'🎯',open:true},
+ {id:'m0',title:'Misi 0 • Diagnostic Challenge',icon:'🧭',key:'m0'},
+ {id:'m1',title:'Misi 1 • Complexity Sorter',icon:'🧠',key:'m1',req:'m0'},
+ {id:'m2',title:'Misi 2 • Decomposition Lab',icon:'🧩',key:'m2',req:'m1'},
+ {id:'m3',title:'Misi 3 • Pattern Hunter',icon:'🔎',key:'m3',req:'m2'},
+ {id:'m4',title:'Misi 4 • Abstraction Filter',icon:'🎯',key:'m4',req:'m3'},
+ {id:'m5',title:'Misi 5 • Algorithm Builder',icon:'⚙️',key:'m5',req:'m4'},
+ {id:'m6',title:'Misi 6 • 5 Whys Detective',icon:'🕵️',key:'m6',req:'m5'},
+ {id:'m7',title:'Misi 7 • Race to School',icon:'🗺️',key:'m7',req:'m6'},
+ {id:'m8',title:'Misi 8 • AI Thinking Lab',icon:'🤖',key:'m8',req:'m7'},
+ {id:'waste',title:'Bonus • Waste Rescue',icon:'♻️',open:true},
+ {id:'final',title:'Final Mission',icon:'🏆',key:'final',req:'m8'},
+ {id:'evaluation',title:'Evaluasi Akhir',icon:'📝',key:'evaluation',req:'final'},
+ {id:'reflection',title:'Refleksi',icon:'🪞',key:'reflection',req:'evaluation'},
+ {id:'achievements',title:'Achievement',icon:'🏅',open:true},
+ {id:'summary',title:'Ringkasan Hasil',icon:'📊',open:true}
+];
+const badgeDefs={m2:['🧩','Decomposition Master'],m3:['🔎','Pattern Hunter'],m4:['🎯','Abstraction Expert'],m5:['⚙️','Algorithm Builder'],m6:['🕵️','Problem Detective'],m7:['🗺️','Route Master'],m8:['🤖','AI Explorer'],reflection:['🏆','Computational Thinker']};
+function completeMission(key,xp=10){if(!state.completed[key]){state.completed[key]=true;state.xp+=xp;if(badgeDefs[key]&&!state.badges.includes(key))state.badges.push(key);saveState();toast('Misi selesai! +'+xp+' XP');renderDashboard()}}
+function renderStatus(){const done=Object.keys(state.completed).filter(k=>state.completed[k]).length;const total=11;const pct=Math.round(Math.min(100,(done/total)*100));document.getElementById('topName').textContent=state.name||'Problem Solver';document.getElementById('xpTop').textContent=state.xp;document.getElementById('badgeTop').textContent=state.badges.length;document.getElementById('progressTop').style.width=pct+'%';}
+function renderDashboard(){const done=Object.keys(state.completed).filter(k=>state.completed[k]).length;const total=11;const pct=Math.round(Math.min(100,(done/total)*100));document.getElementById('dashName').textContent=state.name||'Problem Solver';document.getElementById('levelMetric').textContent=1+Math.floor(state.xp/60);document.getElementById('xpMetric').textContent=state.xp;document.getElementById('badgeMetric').textContent=state.badges.length;document.getElementById('missionMetric').textContent=done+'/'+total;document.getElementById('progressRing').style.setProperty('--p',pct);document.getElementById('ringText').textContent=pct+'%';const nav=document.getElementById('missionNav');nav.innerHTML='';missionDefs.forEach(m=>{const locked=m.req&&!state.completed[m.req];const b=document.createElement('button');b.className='navcard '+(locked?'locked ':'')+(m.key&&state.completed[m.key]?'done':'');b.innerHTML=`<div style="font-size:1.7rem">${m.icon}</div><strong>${m.title}</strong><div class="tiny muted" style="margin-top:6px">${locked?'🔒 Selesaikan misi sebelumnya':m.key&&state.completed[m.key]?'✅ Selesai':'Buka misi'}</div>`;b.disabled=locked;b.onclick=()=>showView(m.id);nav.appendChild(b)})}
+
+document.getElementById('startAdventure').onclick=()=>{document.getElementById('splash').classList.add('hidden');document.getElementById('app').classList.remove('hidden');showView(state.name?(state.lastView||'dashboard'):'profile')};
+document.getElementById('saveProfile').onclick=()=>{const n=document.getElementById('studentName').value.trim(),k=document.getElementById('studentClass').value.trim();if(!n||!k)return toast('Isi nama dan kelas terlebih dahulu.');state.name=n;state.kelas=k;saveState();renderDashboard();showView('dashboard')};
+document.getElementById('resetBtn').onclick=()=>{if(confirm('Hapus semua progress pada browser ini?')){localStorage.removeItem(STORAGE_KEY);state={...defaultState};location.reload()}};
+
+// Pretest
+const preQs=[
+ ['Memecah masalah besar menjadi bagian kecil disebut…',['Abstraksi','Dekomposisi','Algoritma','Pengenalan pola'],1],
+ ['Siti menyadari kemacetan selalu meningkat pada jam tertentu. Ia sedang…',['Mengenali pola','Melakukan dekomposisi','Membuat algoritma','Menghapus data'],0],
+ ['Dalam abstraksi, kita sebaiknya…',['Memakai semua informasi','Fokus pada informasi relevan','Mengabaikan tujuan','Menebak tanpa data'],1],
+ ['Berpikir komputasional hanya berguna bagi programmer.',['Benar','Salah'],1],
+ ['Masalah kompleks biasanya…',['Punya satu penyebab dan satu langkah','Melibatkan banyak faktor/solusi','Tidak perlu evaluasi','Selalu terkait komputer'],1],
+ ['Urutan umum yang masuk akal adalah…',['Algoritma → pola → dekomposisi → abstraksi','Dekomposisi → pola → abstraksi → algoritma','Abstraksi → algoritma → pola → dekomposisi','Pola → algoritma → abstraksi → dekomposisi'],1],
+ ['Data menunjukkan antrean tinggi saat 12.00. Kesimpulan terbaik…',['12.00 pasti penyebab antrean','Ada pola yang perlu dianalisis penyebabnya','Tidak ada informasi berguna','Data harus diabaikan'],1],
+ ['Sistem belajar dari waktu tempuh sebelumnya untuk memperbaiki prediksi. Ini paling dekat dengan…',['Perception','Data representation','Reasoning','Learning'],3]
+];
+function renderPretest(){const box=document.getElementById('pretestBox');box.innerHTML='';preQs.forEach((q,i)=>{const d=document.createElement('div');d.className='question';d.innerHTML=`<h4>${i+1}. ${q[0]}</h4>`+q[1].map((o,j)=>`<label class="option"><input type="radio" name="pre${i}" value="${j}" ${state.pretest[i]==j?'checked':''}> ${o}</label>`).join('');box.appendChild(d)})}
+renderPretest();
+const confStart=document.getElementById('confStart');confStart.value=state.confidenceStart||50;document.getElementById('confStartLabel').textContent=confStart.value;confStart.oninput=e=>document.getElementById('confStartLabel').textContent=e.target.value;
+document.getElementById('submitPretest').onclick=()=>{let missing=0;const ans={};preQs.forEach((q,i)=>{const r=document.querySelector(`input[name="pre${i}"]:checked`);if(!r)missing++;else ans[i]=+r.value});if(missing)return toast('Jawab semua pertanyaan terlebih dahulu.');state.pretest=ans;state.confidenceStart=+confStart.value;state.xp+=5;saveState();completeMission('m0',10);const f=document.getElementById('preFeedback');f.className='feedback show';f.textContent='Jawaban awal tersimpan. Kamu akan membandingkan pemahamanmu setelah menyelesaikan misi.';setTimeout(()=>showView('m1'),700)};
+
+// M1 complexity drag/drop
+const complexityItems=[['Printer tidak aktif','simple'],['Pensil patah','simple'],['Antrean kantin selalu panjang','complex'],['Kemacetan kota','complex'],['Jadwal sekolah sering bentrok','complex'],['Sampah sekolah menumpuk','complex'],['Lampu kelas mati','simple'],['Sistem absensi tidak efektif','complex']];
+let complexityAnswers={};
+function renderComplexity(){const box=document.getElementById('complexCards');box.innerHTML='';complexityItems.forEach(([txt,type],i)=>{if(complexityAnswers[i])return;const c=document.createElement('div');c.className='draggable';c.draggable=true;c.dataset.index=i;c.innerHTML=`<strong>${txt}</strong><div class="mobile-choices"><button class="btn secondary sm" data-pick="simple">Sederhana</button><button class="btn secondary sm" data-pick="complex">Kompleks</button></div>`;c.addEventListener('dragstart',e=>e.dataTransfer.setData('text/plain',i));c.querySelectorAll('[data-pick]').forEach(b=>b.onclick=()=>placeComplexity(i,b.dataset.pick));box.appendChild(c)})}
+function placeComplexity(i,type){complexityAnswers[i]=type;const zone=document.getElementById(type==='simple'?'simpleZone':'complexZone');const item=document.createElement('div');item.className='draggable';item.textContent=complexityItems[i][0];zone.appendChild(item);renderComplexity()}
+['simpleZone','complexZone'].forEach(id=>{const z=document.getElementById(id);z.ondragover=e=>{e.preventDefault();z.classList.add('dragover')};z.ondragleave=()=>z.classList.remove('dragover');z.ondrop=e=>{e.preventDefault();z.classList.remove('dragover');placeComplexity(+e.dataTransfer.getData('text/plain'),z.dataset.type)}});renderComplexity();
+document.getElementById('checkM1').onclick=()=>{if(Object.keys(complexityAnswers).length<complexityItems.length)return toast('Kategorikan semua kartu.');let score=0;complexityItems.forEach((x,i)=>{if(complexityAnswers[i]===x[1])score++});const why=document.getElementById('m1Why').value.trim();if(why.length<20)return toast('Tambahkan alasan singkat agar proses berpikirmu terlihat.');const f=document.getElementById('m1Feedback');f.className='feedback show '+(score>=7?'ok':'bad');f.textContent=`${score}/8 klasifikasi tepat. ${score>=7?'Kamu sudah membedakan ciri sederhana dan kompleks dengan baik.':'Tinjau lagi: masalah kompleks cenderung punya banyak faktor/langkah dan memerlukan analisis serta evaluasi.'}`;state.answers.m1={complexityAnswers,why};saveState();if(score>=7){state.xp+=5;completeMission('m1',10);setTimeout(()=>showView('m2'),700)}};
+
+// M2
+const decomp=['Waktu pelayanan','Jumlah petugas','Metode pembayaran','Jumlah pembeli','Tata letak antrean','Proses penyiapan makanan','Warna seragam petugas'];let decompSelected=new Set();function renderDecomp(){const box=document.getElementById('decompChoices');box.innerHTML='';decomp.forEach((x,i)=>{const b=document.createElement('button');b.className='navcard '+(decompSelected.has(i)?'done':'');b.innerHTML=`<strong>${x}</strong>`;b.onclick=()=>{decompSelected.has(i)?decompSelected.delete(i):decompSelected.add(i);renderDecomp()};box.appendChild(b)})}renderDecomp();
+document.getElementById('checkM2').onclick=()=>{const must=[0,1,2,3,4,5];const good=must.filter(i=>decompSelected.has(i)).length;const bad=decompSelected.has(6);const transfer=document.getElementById('m2Transfer').value.trim();const f=document.getElementById('m2Feedback');f.className='feedback show '+(good>=5&&!bad?'ok':'bad');f.textContent=good>=5&&!bad?'Dekomposisi tepat: kamu memecah masalah berdasarkan bagian proses yang dapat dianalisis.':'Periksa kembali relevansi komponen. Warna seragam tidak banyak membantu memahami penyebab antrean.';if(good>=5&&!bad&&transfer.length>=30){state.answers.m2={selected:[...decompSelected],transfer};state.xp+=5;completeMission('m2',10);setTimeout(()=>showView('m3'),700)}else if(transfer.length<30)toast('Tuliskan minimal tiga bagian untuk masalah keterlambatan tugas.')};
+
+// M3
+ document.getElementById('checkM3').onclick=()=>{const t=document.getElementById('patternTime').value,c=document.getElementById('patternClaim').value,e=document.getElementById('patternExtra').value.trim();const ok=t==='12.00'&&c==='trend'&&e.length>=12;const f=document.getElementById('m3Feedback');f.className='feedback show '+(ok?'ok':'bad');f.textContent=ok?'Tepat. Kamu menemukan pola tanpa mengubah korelasi menjadi klaim sebab-akibat.':'Belum lengkap. Data menunjukkan kecenderungan sekitar 12.00, tetapi penyebab antrean tetap perlu bukti tambahan.';if(ok){state.answers.m3={t,c,e};state.xp+=5;completeMission('m3',10);setTimeout(()=>showView('m4'),700)}};
+
+// M4
+const absItems=[['Jumlah siswa','important'],['Waktu pelayanan','important'],['Jumlah petugas','important'],['Jumlah kasir','important'],['Warna seragam petugas','distract'],['Warna dinding','distract'],['Jumlah menu','important'],['Metode pembayaran','important'],['Musik yang diputar','distract'],['Panjang antrean','important']];let absAnswers={};
+function renderAbs(){const box=document.getElementById('abstractCards');box.innerHTML='';absItems.forEach(([txt,type],i)=>{if(absAnswers[i])return;const c=document.createElement('div');c.className='draggable';c.draggable=true;c.dataset.index=i;c.innerHTML=`<strong>${txt}</strong><div class="mobile-choices"><button class="btn secondary sm" data-pick="important">Penting</button><button class="btn secondary sm" data-pick="distract">Tidak relevan</button></div>`;c.ondragstart=e=>e.dataTransfer.setData('text/plain',i);c.querySelectorAll('[data-pick]').forEach(b=>b.onclick=()=>placeAbs(i,b.dataset.pick));box.appendChild(c)})}
+function placeAbs(i,type){absAnswers[i]=type;const z=document.getElementById(type==='important'?'importantZone':'distractZone');const d=document.createElement('div');d.className='draggable';d.textContent=absItems[i][0];z.appendChild(d);renderAbs()}
+['importantZone','distractZone'].forEach(id=>{const z=document.getElementById(id);z.ondragover=e=>{e.preventDefault();z.classList.add('dragover')};z.ondragleave=()=>z.classList.remove('dragover');z.ondrop=e=>{e.preventDefault();z.classList.remove('dragover');placeAbs(+e.dataTransfer.getData('text/plain'),z.dataset.type)}});renderAbs();
+document.getElementById('checkM4').onclick=()=>{if(Object.keys(absAnswers).length<absItems.length)return toast('Kategorikan semua informasi.');let score=0;absItems.forEach((x,i)=>{if(absAnswers[i]===x[1])score++});const f=document.getElementById('m4Feedback');f.className='feedback show '+(score>=9?'ok':'bad');f.textContent=`${score}/10 tepat. `+(score>=9?'Abstraksi berarti mempertahankan informasi yang relevan dengan tujuan.':'Tinjau apakah informasi tersebut benar-benar membantu menjelaskan atau mengurangi antrean.');if(score>=9){state.answers.m4=absAnswers;state.xp+=5;completeMission('m4',10);setTimeout(()=>showView('m5'),700)}};
+
+// M5 ordering
+let order=['Cari buku','Cek ketersediaan','Ambil buku','Tunjukkan kartu anggota','Catat peminjaman','Bawa buku'];
+function shuffle(a){return [...a].sort(()=>Math.random()-.5)};order=shuffle(order);const correctOrder=['Cari buku','Cek ketersediaan','Ambil buku','Tunjukkan kartu anggota','Catat peminjaman','Bawa buku'];
+function renderOrder(){const box=document.getElementById('orderList');box.innerHTML='';order.forEach((x,i)=>{const d=document.createElement('div');d.className='order-item';d.innerHTML=`<span class="handle">☰</span><strong style="flex:1">${i+1}. ${x}</strong><button class="btn secondary sm" aria-label="Naikkan" ${i===0?'disabled':''}>↑</button><button class="btn secondary sm" aria-label="Turunkan" ${i===order.length-1?'disabled':''}>↓</button>`;const [up,down]=d.querySelectorAll('button');up.onclick=()=>{[order[i-1],order[i]]=[order[i],order[i-1]];renderOrder()};down.onclick=()=>{[order[i+1],order[i]]=[order[i],order[i+1]];renderOrder()};box.appendChild(d)})}renderOrder();
+document.getElementById('checkOrder').onclick=()=>{const ok=order.every((x,i)=>x===correctOrder[i]);const f=document.getElementById('m5Feedback');f.className='feedback show '+(ok?'ok':'bad');f.textContent=ok?'Urutan logis. Sekarang cek percabangan jika buku tidak tersedia.':'Masih ada langkah yang kurang logis. Cek ketersediaan harus terjadi sebelum mengambil buku.';if(ok)state.answers.order=true};
+document.getElementById('checkBranch').onclick=()=>{const r=document.querySelector('input[name="branch"]:checked');if(!r)return toast('Pilih respons percabangan.');if(r.value==='reserve'&&state.answers.order){state.xp+=5;completeMission('m5',10);toast('Percabangan tepat: cari alternatif/reservasi.');setTimeout(()=>showView('m6'),700)}else toast(r.value==='reserve'?'Urutan utama belum tepat.':'Coba pikirkan langkah yang tetap membawa proses menuju tujuan.')};
+
+// M6 5 Whys
+const whyBox=document.getElementById('whyFields');for(let i=1;i<=5;i++){const d=document.createElement('div');d.className='form-row';d.innerHTML=`<label>Why ${i}</label><input class="input whyInput" placeholder="Mengapa...?">`;whyBox.appendChild(d)}
+document.getElementById('checkM6').onclick=()=>{const ev=[...document.querySelectorAll('.evidence:checked')].map(x=>x.value);const whys=[...document.querySelectorAll('.whyInput')].map(x=>x.value.trim());const root=document.getElementById('rootHyp').value.trim(),sol=document.getElementById('rootSolution').value.trim();const validEv=ev.filter(x=>x!=='color').length>=3&&!ev.includes('color');const filled=whys.filter(x=>x.length>8).length>=4;const ok=validEv&&filled&&root.length>=20&&sol.length>=20;const f=document.getElementById('m6Feedback');f.className='feedback show '+(ok?'ok':'bad');f.textContent=ok?'Analisis tersimpan. Ingat: kasus ini dapat melibatkan beberapa faktor; 5 Whys membantu menelusuri kemungkinan akar masalah, bukan membuktikan satu penyebab secara otomatis.':'Lengkapi bukti relevan, minimal empat pertanyaan “mengapa”, hipotesis akar masalah, dan solusi yang dapat diuji.';if(ok){state.answers.m6={ev,whys,root,sol};state.xp+=5;completeMission('m6',10);setTimeout(()=>showView('m7'),700)}};
+
+// M7 route simulation
+const routes=[{id:'r1',name:'R → A → S',base:12,intersections:1,risk:'sedang',edges:['eRA','eAS']},{id:'r2',name:'R → B → C → S',base:13,intersections:2,risk:'tinggi',edges:['eRB','eBC','eCS']},{id:'r3',name:'R → D → E → S',base:12,intersections:2,risk:'rendah',edges:['eRD','eDE','eES']}];let selectedRoute='r1';
+function routeTime(r){let t=r.base;const w=document.getElementById('weather').value,d=document.getElementById('depart').value;if(w==='rain'){if(r.id==='r1')t+=2;if(r.id==='r2')t+=3;if(r.id==='r3')t+=1}if(d==='0630'){if(r.id==='r1')t+=3;if(r.id==='r2')t+=5;if(r.id==='r3')t+=1}if(d==='0700'){if(r.id==='r1')t+=5;if(r.id==='r2')t+=6;if(r.id==='r3')t+=2}return t}
+function renderRoutes(){document.querySelectorAll('.edge').forEach(e=>e.classList.remove('active'));const box=document.getElementById('routeOptions');box.innerHTML='';routes.forEach(r=>{const d=document.createElement('button');d.className='route-option '+(selectedRoute===r.id?'active':'');d.style.width='100%';d.style.color='inherit';d.innerHTML=`<strong>${r.name}</strong><br><span class="small muted">${routeTime(r)} menit • ${r.intersections} persimpangan • risiko ${r.risk}</span>`;d.onclick=()=>{selectedRoute=r.id;renderRoutes()};box.appendChild(d)});const sr=routes.find(r=>r.id===selectedRoute);sr.edges.forEach(id=>document.getElementById(id).classList.add('active'));const best=[...routes].sort((a,b)=>routeTime(a)-routeTime(b)||a.intersections-b.intersections)[0];const res=document.getElementById('routeResult');res.textContent=`Pilihanmu: ${sr.name} = ${routeTime(sr)} menit. Rute terbaik pada kondisi ini: ${best.name} (${routeTime(best)} menit).`;res.className='feedback show '+(sr.id===best.id?'ok':'');}
+document.getElementById('weather').onchange=renderRoutes;document.getElementById('depart').onchange=renderRoutes;renderRoutes();
+document.getElementById('completeRoute').onclick=()=>{const r=document.getElementById('routeReflection').value.trim();if(r.length<30)return toast('Tuliskan refleksi tentang perubahan kondisi dan pemilihan rute.');state.answers.m7={route:selectedRoute,weather:document.getElementById('weather').value,depart:document.getElementById('depart').value,reflection:r};state.xp+=5;completeMission('m7',10);setTimeout(()=>showView('m8'),700)};
+
+// M8 AI
+const aiItems=[['GPS membaca lokasi pengguna','perception'],['Kamera mendeteksi kepadatan kendaraan','perception'],['Jalan disusun menjadi graf berbobot','representation'],['Data jam sibuk disimpan sebagai deret waktu','representation'],['Sistem membandingkan tiga rute','reasoning'],['Aturan menghindari jalan banjir saat hujan','reasoning'],['Model memperbaiki prediksi dari waktu tempuh aktual','learning'],['Sistem mempelajari pola perjalanan sebelumnya','learning']];
+function renderAI(){const box=document.getElementById('aiCards');box.innerHTML='';aiItems.forEach((x,i)=>{const d=document.createElement('div');d.className='question';d.innerHTML=`<strong>${x[0]}</strong><select class="aiSelect" data-i="${i}"><option value="">Pilih kategori</option><option value="perception">Perception</option><option value="representation">Data Representation</option><option value="reasoning">Reasoning</option><option value="learning">Learning</option></select>`;box.appendChild(d)})}renderAI();
+document.getElementById('checkAI').onclick=()=>{const sels=[...document.querySelectorAll('.aiSelect')];if(sels.some(s=>!s.value))return toast('Klasifikasikan semua pernyataan.');let score=0;sels.forEach(s=>{if(s.value===aiItems[+s.dataset.i][1])score++});const f=document.getElementById('m8Feedback');f.className='feedback show '+(score>=7?'ok':'bad');f.textContent=`${score}/8 tepat. `+(score>=7?'Kamu sudah memahami alur konseptual AI pada konteks rute.':'Tinjau lagi: perception = input, representation = pengorganisasian data, reasoning = pengambilan keputusan, learning = perbaikan dari pengalaman/data.');if(score>=7){state.answers.m8=score;state.xp+=5;completeMission('m8',10);setTimeout(()=>showView('final'),700)}};
+
+// Waste bonus
+document.getElementById('completeWaste').onclick=()=>{const ids=['wastePattern','wasteDecomp','wasteAbs','wasteAlg'];if(ids.some(id=>document.getElementById(id).value.trim().length<20))return toast('Lengkapi seluruh tahap bonus mission.');if(!state.waste){state.waste=true;state.xp+=15;saveState();toast('Bonus Waste Rescue selesai! +15 XP')}};
+
+// Final mission
+document.getElementById('completeFinal').onclick=()=>{const vals=['finalD','finalP','finalA','finalG'].map(id=>document.getElementById(id).value.trim());const ok=vals.every(v=>v.length>=30);const f=document.getElementById('finalFeedback');f.className='feedback show '+(ok?'ok':'bad');f.textContent=ok?'MISSION COMPLETE! Empat tahap sudah kamu terapkan pada masalah baru. Jawaban terbuka ini perlu dinilai berdasarkan ketepatan konsep, relevansi alasan, dan kesesuaian konteks.':'Setiap tahap perlu penjelasan yang cukup agar proses berpikirmu dapat ditelaah.';if(ok){state.answers.final=vals;state.xp+=10;completeMission('final',15);setTimeout(()=>showView('evaluation'),700)}};
+
+// Evaluation 15 MC
+const evalQs=[
+ ['Masalah kompleks paling tepat dicirikan oleh…',['Selalu dapat diselesaikan satu langkah','Banyak faktor saling terkait dan perlu analisis','Hanya terjadi di komputer','Tidak perlu evaluasi'],1,'konsep'],
+ ['Memecah masalah pengelolaan sampah menjadi jenis sampah, sumber, dan proses pengolahan adalah…',['Pola','Dekomposisi','Abstraksi','Learning'],1,'dekomposisi'],
+ ['Menemukan bahwa antrean selalu meningkat pada jam istirahat merupakan…',['Pengenalan pola','Algoritma','Abstraksi','Perception'],0,'pola'],
+ ['Untuk menganalisis antrean kantin, informasi yang paling tidak relevan adalah…',['Jumlah kasir','Waktu pelayanan','Warna dinding','Jumlah pembeli'],2,'abstraksi'],
+ ['Urutan langkah jelas untuk menyelesaikan masalah disebut…',['Algoritma','Dekomposisi','Bias','Sensor'],0,'algoritma'],
+ ['Metode 5 Whys terutama membantu…',['Membuktikan sebab tunggal secara otomatis','Menelusuri kemungkinan akar masalah','Menghilangkan kebutuhan data','Menggantikan evaluasi solusi'],1,'analisis'],
+ ['Data menunjukkan siswa terlambat terutama saat hujan. Kesimpulan terbaik…',['Hujan pasti satu-satunya penyebab','Ada pola yang perlu dianalisis dengan faktor lain','Data tidak berguna','Tidak perlu mengumpulkan data tambahan'],1,'pola'],
+ ['Dalam graf rute, node dapat mewakili…',['Persimpangan','Warna jalan','Merek ponsel','Tingkat kelas'],0,'rute'],
+ ['Jika dua rute memiliki waktu sama, pertimbangan tambahan yang masuk akal adalah…',['Stabilitas/keamanan rute','Warna peta','Nama jalan paling pendek','Abaikan semua data'],0,'rute'],
+ ['GPS dan sensor lalu lintas pada sistem rute terutama berkaitan dengan…',['Perception','Learning','Algoritma manual','Refleksi'],0,'ai'],
+ ['Mengubah data jalan menjadi graf berbobot adalah…',['Perception','Data Representation','Learning','Gamifikasi'],1,'ai'],
+ ['Membandingkan beberapa rute dan memilih satu berdasarkan kondisi adalah…',['Reasoning','Perception','Refleksi','Dekomposisi saja'],0,'ai'],
+ ['Memperbaiki prediksi dari data perjalanan sebelumnya adalah…',['Learning','Abstraksi','Perception','Dekomposisi'],0,'ai'],
+ ['Dalam berpikir komputasional, abstraksi berarti…',['Membuang informasi secara acak','Fokus pada informasi relevan terhadap tujuan','Menyimpan semua detail','Menebak solusi'],1,'abstraksi'],
+ ['Langkah yang paling tepat setelah solusi diterapkan pada masalah kompleks adalah…',['Tidak perlu diperiksa lagi','Uji dan evaluasi hasil, lalu perbaiki bila perlu','Hapus semua data','Selalu ganti solusi'],1,'evaluasi']
+];
+function renderEval(){const box=document.getElementById('evalBox');box.innerHTML='';evalQs.forEach((q,i)=>{const d=document.createElement('div');d.className='question';d.innerHTML=`<h4>${i+1}. ${q[0]}</h4>`+q[1].map((o,j)=>`<label class="option"><input type="radio" name="ev${i}" value="${j}"> ${o}</label>`).join('');box.appendChild(d)})}renderEval();
+document.getElementById('submitEval').onclick=()=>{const answers=[];for(let i=0;i<evalQs.length;i++){const r=document.querySelector(`input[name="ev${i}"]:checked`);if(!r)return toast(`Soal ${i+1} belum dijawab.`);answers.push(+r.value)}let score=0;const by={};answers.forEach((a,i)=>{const cat=evalQs[i][3];by[cat]=by[cat]||[0,0];by[cat][1]++;if(a===evalQs[i][2]){score++;by[cat][0]++}});const pct=Math.round(score/evalQs.length*100);const weak=Object.entries(by).sort((a,b)=>(a[1][0]/a[1][1])-(b[1][0]/b[1][1]))[0][0];state.evaluation={answers,score:pct,raw:score,total:evalQs.length,weak};saveState();completeMission('evaluation',15);const f=document.getElementById('evalResult');f.className='feedback show '+(pct>=75?'ok':'');f.innerHTML=`<strong>Nilai: ${pct}/100</strong><br>${pct>=85?'Penguasaan sangat baik.':pct>=70?'Penguasaan baik, masih ada bagian yang perlu diperkuat.':'Perlu penguatan konsep dan latihan aplikasi.'}<br>Rekomendasi: tinjau kembali <strong>${weak}</strong>.`;setTimeout(()=>showView('reflection'),900)};
+
+// Reflection
+const confEnd=document.getElementById('confEnd');confEnd.value=state.confidenceEnd||50;document.getElementById('confEndLabel').textContent=confEnd.value;confEnd.oninput=e=>document.getElementById('confEndLabel').textContent=e.target.value;
+document.getElementById('saveReflection').onclick=()=>{const a=document.getElementById('ref1').value.trim(),b=document.getElementById('ref2').value.trim(),c=document.getElementById('ref3').value.trim();if([a,b,c].some(x=>x.length<25))return toast('Lengkapi refleksi dengan penjelasan yang cukup.');state.reflection={a,b,c};state.confidenceEnd=+confEnd.value;saveState();completeMission('reflection',20);const f=document.getElementById('reflectFeedback');f.className='feedback show ok';f.textContent=`Refleksi tersimpan. Keyakinan awal ${state.confidenceStart}/100 → akhir ${state.confidenceEnd}/100.`;setTimeout(()=>showView('summary'),700)};
+
+function renderAchievements(){const box=document.getElementById('achievementGrid');box.innerHTML='';Object.entries(badgeDefs).forEach(([key,[ico,name]])=>{const got=state.badges.includes(key);const d=document.createElement('div');d.className='achievement '+(got?'':'locked');d.innerHTML=`<div class="ico">${ico}</div><div><strong>${name}</strong><div class="small muted">${got?'Terbuka':'Terkunci'}</div></div>`;box.appendChild(d)})}
+function renderSummary(){const box=document.getElementById('summaryContent');const done=Object.keys(state.completed).filter(k=>state.completed[k]).length;const evalScore=state.evaluation?state.evaluation.score:'—';box.innerHTML=`<div class="card"><h3>📊 Progress</h3><p><strong>${done}/11</strong> misi utama selesai</p><p><strong>${state.xp}</strong> XP • <strong>${state.badges.length}</strong> badge</p><p>Evaluasi akhir: <strong>${evalScore}${evalScore==='—'?'':'/100'}</strong></p></div><div class="card"><h3>🧠 Perubahan keyakinan</h3><p>Awal: <strong>${state.confidenceStart}/100</strong></p><p>Akhir: <strong>${state.confidenceEnd}/100</strong></p><div class="progress-track" style="width:100%;height:14px"><div class="progress-fill" style="width:${state.confidenceEnd}%"></div></div></div><div class="card"><h3>🪞 Refleksi</h3><p>${state.reflection.a||'Belum diisi.'}</p><p>${state.reflection.b||''}</p></div><div class="card"><h3>🎯 Langkah berikutnya</h3><p>${state.evaluation?`Fokus penguatan: <strong>${state.evaluation.weak}</strong>.`: 'Selesaikan evaluasi untuk memperoleh rekomendasi.'}</p><p>${state.reflection.c||'Tuliskan tantangan belajarmu pada bagian refleksi.'}</p></div>`}
+
+// restore basic profile fields and status
+if(state.name){document.getElementById('studentName').value=state.name;document.getElementById('studentClass').value=state.kelas}
+renderStatus();renderDashboard();renderAchievements();
+</script>
+</body>
+</html>
